@@ -13,7 +13,7 @@ tmp_file="/var/tmp/restore_from_glacier"
 #aws sns publish --topic-arn arn:aws:sns:eu-west-1:167977214020:cordis-redshift-cluster-default-alarms --subject "STARTED: Collecting list of EMR data files to move from Glacier to standard storage" --message "Started collecting file list of EMR files in $root_bucket. Another message will be sent when the job is completed and the move is starting." --region eu-west-1
 
 printf "collecting files to change class\n"
-aws s3api list-objects-v2 --bucket $root_bucket  --prefix emr-appdata --prefix $S3prefix --query "Contents[?StorageClass=='GLACIER']" --output text  | awk '{print $2}' > $tmp_file
+aws s3api list-objects-v2 --bucket $root_bucket --prefix $S3prefix --query "Contents[?StorageClass=='GLACIER']" --output text  | awk '{print $2}' > $tmp_file
 
 #aws sns publish --topic-arn arn:aws:sns:eu-west-1:167977214020:cordis-redshift-cluster-default-alarms --subject "STARTING: Move EMR data files from Glacier to standard storage" --message "Finished creating file list. Starting move of EMR files in $root_bucket has started. Another message will be sent when the job is completed to verify success." --region eu-west-1
 
